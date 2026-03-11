@@ -84,23 +84,14 @@ export const CreatePost: React.FC = () => {
       ) {
          const aiStudio = (window as any).aistudio;
          if (aiStudio) {
-            // Check if we were trying high quality
-            const isHighQual = imageSize === '2K' || imageSize === '4K';
-            const msg = isHighQual 
-                ? "الجودة العالية (2K/4K) تتطلب مشروعاً مدفوعاً. هل تريد تغيير المفتاح؟"
-                : "حدث خطأ في الصلاحيات. هل تريد إعادة اختيار مفتاح API؟";
-                
-            const confirmRetry = window.confirm(msg);
-            if (confirmRetry) {
-               try {
-                   await aiStudio.openSelectKey();
-               } catch(e) {
-                   console.error(e);
-               }
-            }
+             try {
+                 await aiStudio.openSelectKey();
+             } catch(e) {
+                 console.error(e);
+             }
          }
       } else {
-        alert("حصلت مشكلة أثناء التوليد. حاول مرة تانية أو جرب تغير الوصف.");
+        console.error("حصلت مشكلة أثناء التوليد. حاول مرة تانية أو جرب تغير الوصف.");
       }
     } finally {
       setIsGenerating(false);

@@ -4,7 +4,7 @@ import { BlogPost as BlogPostType, UserRole } from '../types';
 import { getPostById, deletePost } from '../services/storage';
 import { useAuth } from '../context/AuthContext';
 import { CommentSection } from '../components/CommentSection';
-import { Calendar, User, ArrowRight, Trash2, Clock, Share2 } from 'lucide-react';
+import { Calendar, User, ArrowRight, Trash2, Clock, Share2, AlertTriangle } from 'lucide-react';
 
 export const BlogPost: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +12,7 @@ export const BlogPost: React.FC = () => {
   const { user } = useAuth();
   const [post, setPost] = useState<BlogPostType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     // محاكاة التحميل
@@ -25,11 +26,9 @@ export const BlogPost: React.FC = () => {
   }, [id]);
 
   const handleDeletePost = () => {
-    if (window.confirm('متأكد إنك عايز تحذف المقال ده نهائي؟ مفيش رجعة!')) {
-      if (post) {
-        deletePost(post.id);
-        navigate('/blog');
-      }
+    if (post) {
+      deletePost(post.id);
+      navigate('/blog');
     }
   };
 
@@ -60,7 +59,34 @@ export const BlogPost: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen py-24 px-4 bg-white">
+    <div className="min-h-screen py-24 px-4 bg-white relative">
+      {/* Delete Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-fade-in-up">
+            <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle size={32} />
+            </div>
+            <h3 className="text-2xl font-bold text-center text-slate-900 mb-2">تأكيد الحذف</h3>
+            <p className="text-center text-slate-500 mb-8">متأكد إنك عايز تحذف المقال ده نهائي؟ مفيش رجعة!</p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 py-3 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition"
+              >
+                إلغاء
+              </button>
+              <button 
+                onClick={handleDeletePost}
+                className="flex-1 py-3 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 transition"
+              >
+                نعم، احذف
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto">
         
         {/* Navigation & Controls */}
@@ -72,7 +98,7 @@ export const BlogPost: React.FC = () => {
           <div className="flex gap-2">
             {user && user.role === UserRole.ADMIN && (
               <button 
-                onClick={handleDeletePost}
+                onClick={() => setShowDeleteModal(true)}
                 className="flex items-center gap-2 text-red-500 hover:bg-red-50 px-4 py-2 rounded-full transition font-bold text-sm"
               >
                 <Trash2 size={16} /> حذف المقال

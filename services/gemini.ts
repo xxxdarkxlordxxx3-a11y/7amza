@@ -13,7 +13,7 @@ export const generateImage = async (prompt: string, aspectRatio: string = "16:9"
   // Use Gemini 2.5 Flash Image for standard 1K requests (Faster, Cheaper/Free)
   // Use Gemini 3 Pro Image for 2K/4K (Requires Paid Plan/Billing)
   const isHighQuality = imageSize === '2K' || imageSize === '4K';
-  const model = isHighQuality ? 'gemini-3-pro-image-preview' : 'gemini-2.5-flash-image';
+  const model = isHighQuality ? 'gemini-2.5-pro-image-preview' : 'gemini-2.5-flash-image';
 
   const config: any = {};
   

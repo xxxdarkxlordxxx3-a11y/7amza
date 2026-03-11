@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Comment, UserRole } from '../types';
 import { getCommentsByPostId, addComment, deleteComment } from '../services/storage';
-import { Send, Trash2, UserCircle2 } from 'lucide-react';
+import { Send, Trash2, UserCircle2, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface CommentSectionProps {
@@ -14,6 +14,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
   // تحميل التعليقات
   const loadComments = () => {
@@ -50,15 +51,43 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
   };
 
   // حذف تعليق (للأدمن فقط)
-  const handleDelete = (commentId: string) => {
-    if (window.confirm('متأكد عايز تمسح التعليق ده؟')) {
-      deleteComment(commentId);
+  const confirmDelete = () => {
+    if (commentToDelete) {
+      deleteComment(commentToDelete);
       loadComments();
+      setCommentToDelete(null);
     }
   };
 
   return (
-    <div className="mt-16 border-t border-slate-100 pt-10">
+    <div className="mt-16 border-t border-slate-100 pt-10 relative">
+      {/* Delete Modal */}
+      {commentToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-fade-in-up">
+            <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle size={32} />
+            </div>
+            <h3 className="text-2xl font-bold text-center text-slate-900 mb-2">تأكيد الحذف</h3>
+            <p className="text-center text-slate-500 mb-8">متأكد عايز تمسح التعليق ده؟</p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setCommentToDelete(null)}
+                className="flex-1 py-3 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition"
+              >
+                إلغاء
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="flex-1 py-3 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 transition"
+              >
+                نعم، احذف
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <h3 className="text-2xl font-bold text-slate-800 mb-8 flex items-center gap-2">
         التعليقات <span className="text-sm font-normal text-slate-500 bg-slate-100 px-2 py-1 rounded-full">{comments.length}</span>
       </h3>
@@ -114,7 +143,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
                   {/* زر الحذف للأدمن فقط */}
                   {user && user.role === UserRole.ADMIN && (
                     <button
-                      onClick={() => handleDelete(comment.id)}
+                      onClick={() => setCommentToDelete(comment.id)}
                       className="text-slate-300 hover:text-red-500 transition p-1 opacity-0 group-hover:opacity-100"
                       title="حذف التعليق"
                     >

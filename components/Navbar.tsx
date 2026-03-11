@@ -42,14 +42,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onTriggerEasterEgg }) => {
               e.preventDefault(); // Optional: prevent text selection issues
               onTriggerEasterEgg();
             }}
-            className="text-2xl font-black tracking-tighter flex items-center gap-1 group select-none cursor-pointer -mt-4"
+            className="text-2xl font-black tracking-tighter flex items-center gap-1 group select-none cursor-pointer -mt-6"
             title="Double click for a surprise..."
           >
             <span className="bg-gradient-to-r from-brand-green via-brand-purple to-brand-red text-transparent bg-clip-text group-hover:scale-105 transition-transform">pl.m</span>
           </Link>
 
-          {/* Desktop Menu - Raised with -mt-4 */}
-          <div className="hidden md:flex items-center space-x-2 space-x-reverse -mt-4">
+          {/* Desktop Menu - Raised with -mt-6 */}
+          <div className="hidden md:flex items-center space-x-2 space-x-reverse -mt-6">
             <div className="flex space-x-2 space-x-reverse ml-6">
                <Link to="/" className={isActive('/')}>الرئيسية</Link>
                <Link to="/portfolio" className={isActive('/portfolio')}>الأعمال</Link>
@@ -89,8 +89,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onTriggerEasterEgg }) => {
             )}
           </div>
 
-          {/* Mobile Button - Raised with -mt-4 for consistency */}
-          <div className="md:hidden -mt-4">
+          {/* Mobile Button - Raised with -mt-6 for consistency */}
+          <div className="md:hidden -mt-6">
             <button onClick={() => setIsOpen(!isOpen)} className="text-slate-700 p-2 hover:bg-slate-100 rounded-lg transition">
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

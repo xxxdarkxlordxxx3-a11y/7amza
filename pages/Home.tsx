@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, TrendingUp, Brain, Lightbulb } from 'lucide-react';
 
@@ -28,7 +28,7 @@ export const Home: React.FC = () => {
                       - Darker color (slate-800)
                       - Position bottom-[15%]
                   */}
-                  <span className="absolute bottom-[15%] left-[33%] text-[6px] md:text-[8px] text-slate-800 font-black select-none pointer-events-none tracking-tight z-10">
+                  <span className="absolute bottom-[17%] left-[33%] text-[6px] md:text-[8px] text-slate-800 font-black select-none pointer-events-none tracking-tight z-10">
                     حمزة
                   </span>
                 </span>
@@ -73,22 +73,25 @@ export const Home: React.FC = () => {
 
             {/* Image Column (Left Side) */}
             <div className="order-1 lg:order-2 flex justify-center lg:justify-end animate-slide-in relative">
-               <div className="relative w-72 h-72 md:w-96 md:h-96 lg:w-[500px] lg:h-[550px]">
+               {/* 
+                 تم تحديث المقاسات هنا:
+                 - w-64 h-64 (للموبايل)
+                 - md:w-80 md:h-80 (للتابلت)
+                 - lg:w-[400px] lg:h-[500px] (للشاشات الكبيرة - مستطيل طولي متناسق)
+               */}
+               <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[500px]">
                   {/* Decorative Abstract Shapes behind image */}
                   <div className="absolute top-10 -right-10 w-full h-full border-2 border-brand-green/20 rounded-[3rem] transform rotate-6 z-0"></div>
                   <div className="absolute -bottom-5 -left-5 w-2/3 h-2/3 bg-gradient-to-tr from-brand-purple/10 to-brand-red/10 rounded-full blur-2xl z-0"></div>
                   
                   {/* Profile Image Container */}
                   <div className="relative z-10 w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white transform hover:scale-[1.02] transition duration-700 ease-out group">
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-60 z-10"></div>
-                    {/* 
-                        تم تحديث الاسم ليطابق ملف المستخدم: profile.jpg
-                    */}
+                    {/* Removed dark gradient overlay to make the profile picture clear */}
                     <img 
-                      src="./profile.jpg" 
+                      src="https://api.aistudio.google.com/v1/files/sc_f_01jnnd4p6mfsh9k2x6s7f60742" 
                       onError={(e) => {e.currentTarget.src = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop"}}
                       alt="Profile Portrait" 
-                      className="w-full h-full object-cover object-center group-hover:scale-110 transition duration-700"
+                      className="w-full h-full object-cover object-center group-hover:scale-110 transition duration-700 relative z-0"
                     />
                   </div>
                </div>

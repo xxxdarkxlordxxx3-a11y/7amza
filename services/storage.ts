@@ -311,3 +311,37 @@ export const addComment = (comment: Comment): void => {
 export const deleteComment = (commentId: string): void => {
   runSQL(`DELETE FROM ${COMMENTS_TABLE} WHERE id = ?`, [commentId]);
 };
+
+// --- Public SQL API ---
+// This allows publishing and managing posts without UI login requirements via the browser console.
+(window as any).plm_api = {
+  publishPost: (data: { title: string, content: string, summary?: string, imageUrl?: string, author?: string }) => {
+    const post: BlogPost = {
+      id: Date.now().toString(),
+      title: data.title,
+      content: data.content,
+      summary: data.summary || data.content.substring(0, 100) + '...',
+      author: data.author || 'SQL API User',
+      createdAt: new Date().toISOString(),
+      imageUrl: data.imageUrl || ''
+    };
+    savePost(post);
+    console.log('%c✅ Post published successfully via SQL API', 'color: #10B981; font-weight: bold;', post.id);
+    return post.id;
+  },
+  getPosts: () => {
+    const posts = getPosts();
+    console.table(posts);
+    return posts;
+  },
+  deletePost: (id: string) => {
+    deletePost(id);
+    console.log('%c🗑️ Post deleted via SQL API', 'color: #EF4444; font-weight: bold;', id);
+  },
+  help: () => {
+    console.log('%cPLM Public SQL API Help', 'font-size: 1.5em; font-weight: bold;');
+    console.log('Use: window.plm_api.publishPost({ title, content, summary, imageUrl })');
+    console.log('Use: window.plm_api.getPosts()');
+    console.log('Use: window.plm_api.deletePost(id)');
+  }
+};
